@@ -188,16 +188,75 @@ Shortest Job First (SJF) preemptive scheduling is implemented successfully.
 To implement Shortest Job First (SJF) Non-Preemptive Scheduling
 
 ## ALGORITHM:
+1. Initialize variables and arrays to store process information, such as process ID (process_id), arrival time (arrival_time), burst time (burst_time), completion time (completion_time), waiting time (waiting_time), and turnaround time (turnaround_time).
 
+2. Read the number of processes (n) from the user.
+
+3. Input process information for each process, including arrival time and burst time, and store this information in the respective arrays.
+
+4. Sort the processes based on their arrival times in ascending order using a simple bubble sort algorithm. This step ensures that processes are in the order of their arrival.
+
+5. Initialize the current time (time) to 0.
+
+6. Perform the scheduling loop for all processes:
+   a. Find the process with the smallest burst time that has already arrived and is not yet completed. Initialize "shortest_job" to -1 and "shortest_time" to a large initial value.
+   b. Iterate through the processes, checking if they have arrived and if their burst time is smaller than the current "shortest_time." If so, update "shortest_job" to the current process. 
+   c. If "shortest_job" remains -1, it means no process is available to run at this time. Increment the time by 1.
+   d. If a process is available (shortest_job != -1), execute the selected process. Update the completion time, waiting time, and turnaround time for this process. Mark the burst time of the completed process as -1 to indicate completion.
+
+7. Display the scheduling information in a tabular format, including Process ID (P), Arrival Time (AT), Burst Time (BT), Completion Time (CT), Waiting Time (WT), and Turnaround Time (TAT) for each process.
 
 
 PROGRAM:
+~~~
+def sjf_non_preemptive(processes, burst_time):
+    n = len(processes)
+
+    # Sort processes based on their burst times
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if burst_time[j] > burst_time[j + 1]:
+                processes[j], processes[j + 1] = processes[j + 1], processes[j]
+                burst_time[j], burst_time[j + 1] = burst_time[j + 1], burst_time[j]
+
+    # Calculate waiting time for each process
+    waiting_time = [0] * n
+    waiting_time[0] = 0
+
+    for i in range(1, n):
+        waiting_time[i] = burst_time[i - 1] + waiting_time[i - 1]
+
+    # Calculate turnaround time for each process
+    turnaround_time = [0] * n
+    for i in range(n):
+        turnaround_time[i] = waiting_time[i] + burst_time[i]
+
+    # Calculate the average waiting time and average turnaround time
+    total_waiting_time = sum(waiting_time)
+    total_turnaround_time = sum(turnaround_time)
+    average_waiting_time = total_waiting_time / n
+    average_turnaround_time = total_turnaround_time / n
+
+    # Print the results
+    print("Process\tBurst Time\tWaiting Time\tTurnaround Time")
+    for i in range(n):
+        print(f"{processes[i]}\t{burst_time[i]}\t\t{waiting_time[i]}\t\t{turnaround_time[i]}")
+
+    print(f"Average Waiting Time: {average_waiting_time}")
+    print(f"Average Turnaround Time: {average_turnaround_time}")
 
 
+# Example usage:
+if __name__ == "__main__":
+    processes = ['P1', 'P2', 'P3', 'P4', 'P5']
+    burst_time = [6, 8, 7, 3, 2]
+    sjf_non_preemptive(processes, burst_time)
+~~~
 OUTPUT:
+![3](https://github.com/vidhyadharan-03/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/114286357/60852759-2b93-4b25-a8fb-a09b9200a916)
+## RESULT: 
+Shortest Job First (SJF) Non-preemptive scheduling is implemented successfully.
 
-
-RESULT: Shortest Job First (SJF) Non-preemptive scheduling is implemented successfully.
 
 ## AIM: 
 To implement Round Robin (RR) Scheduling
